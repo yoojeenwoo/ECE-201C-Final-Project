@@ -49,7 +49,7 @@ def sample_gen(N):
 			for p in range(6):
 				head += "inv%d_q%d_%s " % (gate, q, param_names[p])
 	
-	np.savetxt("samples.txt", samples, delimiter='\t', header=head, comments='')
+	np.savetxt("samples.txt", samples, delimiter='\t', header=head, footer=".ENDDATA", comments='')
 	return samples
 	
 if __name__ == '__main__': # Test
