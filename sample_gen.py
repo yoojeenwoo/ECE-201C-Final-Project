@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-def sample_gen(N):
+def sample_gen():
 	# Columns: toxe, xl, xw, vth, u0, voff
 	param_names = ["toxe", "x1", "xw", "vth", "u0", "voff"]
 	# Rows: mean(pmos), std(pmos), mean(nmos), std(nmos)
@@ -12,45 +12,41 @@ def sample_gen(N):
 	[3.602e-22, 4.681e-20, 1.156e-19, 1.094e-2, 5.942e-6, 1.367e-2]])
 
 
-	# Sample array will be organized as [nand1,...,nand10, inv1,...,inv10]
-	# Each gate's columns will be split as the following:
-	# nand: q1 (pmos), q2 (pmos), q3 (nmos), q4 (nmos)
-	# inv: q1 (pmos), q2 (nmos)
-
-	# Generate NAND Samples
-	nand_samples = np.zeros((N, 240), dtype="float")
-	for gate in range(10):
-		for q in range(4):
-			for p in range(6):
-				if (q < 2):
-					nand_samples[:,gate*24+q*6+p] = np.random.normal(params[0, p], params[1, p], size=N)
-				else:
-					nand_samples[:,gate*24+q*6+p] = np.random.normal(params[2, p], params[3, p], size=N)
-
-	# Generate Inverter Samples
-	inv_samples = np.zeros((N, 120), dtype="float")
-	for gate in range(10):
-		for q in range(2):
-			for p in range(6):
-				inv_samples[:, gate*12+q*6+p] = np.random.normal(params[2*q, p], params[2*q+1, p], N)
-				
-	samples = np.concatenate((nand_samples, inv_samples), axis=1)
+	# Sample array will be organized as
+	#       toxe x1 xw vth0 u0 voff
+	# Gate1
+	# Gate2
+	# ...
+	# Gate10
+	# Each gate's rows include 3 pmos values and 3 nmos values
+	
+	samples = np.zeros((60, 6), dtype="float")
+	for p in range(6):
+		pmos = np.random.normal(params[0, p], params[1, p], size=30)
+		nmos = np.random.normal(params[2, p], params[3, p], size=30)
+		for gate in range(10):
+			samples[gate*6:gate*6+3, p] = pmos[gate*3:gate*3+3]
+			samples[gate*6+3:gate*6+6, p] = nmos[gate*3:gate*3+3]
 	
 	# Construct file header
-	# Example header: nand1_q1_toxe
-	head = ".DATA data\n"
+	# Example name: toxe_p12, where p is pmos, 1 is stage, 2 is index
+	head = ".DATA data\n"		
 	for gate in range(10):
-		for q in range(4):
-			for p in range(6):
-				head += "nand%d_q%d_%s " % (gate, q, param_names[p])
-				
-	for gate in range(10):
-		for q in range(2):
-			for p in range(6):
-				head += "inv%d_q%d_%s " % (gate, q, param_names[p])
+		for i in range(6):
+			if (i < 3):
+				pn = 'p'
+			else:
+				pn = 'n'
+			for j in range(6):
+				head += "%s_%s%d%d" % (param_names[j], pn, gate+1, (i%3)+1)
+				if (j == 5):
+					head += '\n'
+				else:
+					head += ' '
+			
 	
 	np.savetxt("samples.txt", samples, delimiter='\t', header=head, footer=".ENDDATA", comments='')
 	return samples
 	
 if __name__ == '__main__': # Test
-	print(sample_gen(5))
+	print(sample_gen())
