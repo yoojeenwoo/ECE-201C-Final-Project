@@ -11,13 +11,21 @@ presample_data = zeros(360, N_PRESAMPLE);
 labels = zeros(N_PRESAMPLE);
 
 for i = 1:N_PRESAMPLE
-	samples = reshape(sample_gen(1), 360);
+	samples = reshape(sample_gen(1), 360, 1);
 	[~,~] = dos([hspice_path, ' -i path_new.sp -o mc_out.lis']);
 
-
-	output = fopen('mc_out.lis', 'r');
-	result = regexp(output, 'median\s+=\s+\d+\.\d+\w', 'match');
-	result = regexprep(result, 'median\s+=\s+', '');
+    file1 = fopen('path_new.log');
+	idx = 1;
+	while(1)
+		line = fgetl(file1);
+		if(~ischar(line))
+		  break;
+		end
+		if(strcmp(line,'td='))
+			result = regexp(line, '(?<=td=) \d+\w', 'match');
+			break
+		end
+	end
 	result = regexprep(result, 'p', 'e-12');
 	result = regexprep(result, 'n', 'e-09');
 	result = regexprep(result, 'f', 'e-15');
@@ -27,4 +35,5 @@ for i = 1:N_PRESAMPLE
 		labels(i) = 1;
         presample_data(:,i) = samples;
     end
+    fclose(file1);
 end
