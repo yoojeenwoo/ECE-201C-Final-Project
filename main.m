@@ -11,7 +11,7 @@ presample_data = zeros(360, N_PRESAMPLE);
 labels = zeros(N_PRESAMPLE);
 
 for i = 1:N_PRESAMPLE
-	samples = reshape(sample_gen(), 360);
+	samples = reshape(sample_gen(1), 360);
 	[~,~] = dos([hspice_path, ' -i path_new.sp -o mc_out.lis']);
 
 
@@ -25,6 +25,6 @@ for i = 1:N_PRESAMPLE
 		labels(i) = 0;
 	else
 		labels(i) = 1;
-	presample_data(:,i) = samples;
+        presample_data(:,i) = samples;
     end
 end
