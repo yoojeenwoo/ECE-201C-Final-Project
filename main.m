@@ -14,14 +14,14 @@ for i = 1:N_PRESAMPLE
 	samples = reshape(sample_gen(1), 360, 1);
 	[~,~] = dos([hspice_path, ' -i path_new.sp -o mc_out.lis']);
 
-    file1 = fopen('path_new.log');
+    file1 = fopen('path_new.log', 'r');
 	idx = 1;
 	while(1)
 		line = fgetl(file1);
 		if(~ischar(line))
 		  break;
 		end
-		if(strcmp(line,'td='))
+		if(contains(line,'td='))
 			result = regexp(line, '(?<=td=) \d+\w', 'match');
 			break
 		end

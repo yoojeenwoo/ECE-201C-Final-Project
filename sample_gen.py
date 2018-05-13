@@ -45,7 +45,7 @@ def sample_gen():
 					head += ' '
 			
 	
-	np.savetxt("samples.txt", samples, delimiter='\t', header=head, footer=".ENDDATA", comments='')
+	np.savetxt("samples_mc.txt", samples, delimiter='\t', header=head, footer=".ENDDATA", comments='')
 	return samples
 	
 if __name__ == '__main__': # Test

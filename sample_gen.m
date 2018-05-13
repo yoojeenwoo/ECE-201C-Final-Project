@@ -1,7 +1,7 @@
 
 function [samples] = sample_gen(batch_size)
 	% Columns: toxe, xl, xw, vth, u0, voff
-	param_names = ["toxe", "xl", "xw", "vth", "u0", "voff"];
+	param_names = ['toxe'; 'xl  '; 'xw  '; 'vth0'; 'u0  '; 'voff'];
 	% Rows: mean(pmos), std(pmos), mean(nmos), std(nmos)
 	params = [[2.7e-9, 5.1e-9, 1.8e-8, -3.96e-1, 8.807e-3, -1.5e-1] 
 	[3.376e-20, 4.277e-21, 5.687e-20, 1.15e-2, 4.196e-5, 1.797e-3]
@@ -31,7 +31,7 @@ function [samples] = sample_gen(batch_size)
 	% Construct file header
 	% Example name: toxe_p12, where p is pmos, 1 is stage, 2 is index
 	fid1 = fopen('sweep_data_mc','w');
-	fprintf(fid1, ".DATA data\n");
+	fprintf(fid1, '.DATA data\n');
 	for gate = 1:10
 		for i = 0:5
 			if (i < 3)
@@ -40,19 +40,19 @@ function [samples] = sample_gen(batch_size)
 				pn = 'n';
 			end
 			for j = 1:6
-				fprintf(fid1, "%s_%s%d%d", param_names(j), pn, gate, mod(i,3)+1);
+				fprintf(fid1, '%s_%s%d%d', deblank(param_names(j,:)), pn, gate, mod(i,3)+1);
 				if (j == 6)
 					fprintf(fid1, '\n');
 				else
 					fprintf(fid1, ' ');
-				end
+                end
             end
         end
 	end
 	
 	for i=1:60*batch_size
 		for j=1:6
-			fprintf(fid1, "%e", samples(i, j));
+			fprintf(fid1, '%e', samples(i, j));
 			if (j == 6)
 				fprintf(fid1, '\n');
 			else
