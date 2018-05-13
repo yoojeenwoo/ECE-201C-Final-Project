@@ -1,17 +1,21 @@
 N_PRESAMPLE = 1000;
 TAIL_THR = 1.395e-10;
 CLASS_THR = 1.38e-10;
+BATCH_SZ = 1;
 hspice_path = '/w/apps3/Synopsys/HSPICE/vG-2012.06/hspice/bin/hspice';
 
 %% PRESAMPLE STAGE
 
 % Presampled Data will group data points by column.
 % Row 0 will be the tail/non-tail result corresponding to the parameters in rows 1-360
-presample_data = zeros(360, N_PRESAMPLE);
+presample_data = zeros(360*BATCH_SZ, N_PRESAMPLE); 
 labels = zeros(1, N_PRESAMLE);
 
 for i = 1:N_PRESAMPLE
-	samples = reshape(sample_gen(1), 360, 1);
+	for j = 1:BATCH_SZ
+		presample_data(:,j) = reshape(sample_gen(BATCH_SZ), 360, 1);
+	end
+	presample_data(:,i) = samples;
 	[~,~] = dos([hspice_path, ' -i path_new.sp -o mc_out.lis']);
 
     file1 = fopen('path_new.log', 'r');
@@ -34,6 +38,5 @@ for i = 1:N_PRESAMPLE
 	else
 		labels(i) = 1;
     end
-    presample_data(:,i) = samples;
     fclose(file1);
 end
