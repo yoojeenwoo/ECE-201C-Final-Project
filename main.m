@@ -8,7 +8,7 @@ hspice_path = '/w/apps3/Synopsys/HSPICE/vG-2012.06/hspice/bin/hspice';
 % Presampled Data will group data points by column.
 % Row 0 will be the tail/non-tail result corresponding to the parameters in rows 1-360
 presample_data = zeros(360, N_PRESAMPLE);
-labels = zeros(N_PRESAMPLE);
+labels = zeros(1, N_PRESAMLE);
 
 for i = 1:N_PRESAMPLE
 	samples = reshape(sample_gen(1), 360, 1);
@@ -33,7 +33,7 @@ for i = 1:N_PRESAMPLE
 		labels(i) = 0;
 	else
 		labels(i) = 1;
-        presample_data(:,i) = samples;
     end
+    presample_data(:,i) = samples;
     fclose(file1);
 end
