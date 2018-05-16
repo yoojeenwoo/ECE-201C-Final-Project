@@ -1,7 +1,10 @@
-N_PRESAMPLE = 1000;
+clc;
+clear all;
+close all;
+N_PRESAMPLE = 200000;
 TAIL_THR = 1.395e-10;
 CLASS_THR = 1.38e-10;
-BATCH_SZ = 100; % N_PRESAMPLE should be divisible by BATCH_SZ
+BATCH_SZ = 1000; % N_PRESAMPLE should be divisible by BATCH_SZ
 hspice_path = '/w/apps3/Synopsys/HSPICE/vG-2012.06/hspice/bin/hspice';
 
 %% PRESAMPLE STAGE
@@ -12,6 +15,7 @@ presample_data = zeros(360, N_PRESAMPLE);
 labels = zeros(1, N_PRESAMPLE);
 tic
 for i = 1:(N_PRESAMPLE/BATCH_SZ)
+    i
 	% Sample_Gen output is organized in vertically stacked 60 x 6 blocks
 	% We reshape each block to be a 360 x 1 column of the presample_data matrix
 	% Reshape stacks each of the six 60x1 columns of the original sample
@@ -21,9 +25,9 @@ for i = 1:(N_PRESAMPLE/BATCH_SZ)
 	end
 	
 	% Run HSPICE Simulation
-% 	[~,~] = dos([hspice_path, ' -i path_new.sp -o mc_out.lis']);
-%     file1 = fopen('path_new.log', 'r');
-    file1 = fopen('brian_out.lis', 'r');
+ 	[~,~] = dos([hspice_path, ' -i path_new.sp -o mc_out.lis']);
+     file1 = fopen('mc_out.lis', 'r');
+%    file1 = fopen('brian_out.lis', 'r');
 	
 	% Parse HSPICE Output
 	idx = 1;
@@ -32,8 +36,8 @@ for i = 1:(N_PRESAMPLE/BATCH_SZ)
 		if(~ischar(line))
 		  break;
 		end
-		if(contains(line,'td='))
-			result = regexp(line, '(?<=td=) \d+\w', 'match');
+		if(strfind(line,'td='))
+			result = regexp(line, '(?<=td=) \d+\.\d+\w', 'match');
 			result = regexprep(result, 'p', 'e-12');
 			result = regexprep(result, 'n', 'e-09');
 			result = regexprep(result, 'f', 'e-15');
