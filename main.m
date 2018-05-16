@@ -9,8 +9,8 @@ hspice_path = '/w/apps3/Synopsys/HSPICE/vG-2012.06/hspice/bin/hspice';
 % Presampled Data will group data points by column.
 % Row 0 will be the tail/non-tail result corresponding to the parameters in rows 1-360
 presample_data = zeros(360, N_PRESAMPLE); 
-labels = zeros(1, N_PRESAMLE);
-
+labels = zeros(1, N_PRESAMPLE);
+tic
 for i = 1:(N_PRESAMPLE/BATCH_SZ)
 	% Sample_Gen output is organized in vertically stacked 60 x 6 blocks
 	% We reshape each block to be a 360 x 1 column of the presample_data matrix
@@ -21,8 +21,9 @@ for i = 1:(N_PRESAMPLE/BATCH_SZ)
 	end
 	
 	% Run HSPICE Simulation
-	[~,~] = dos([hspice_path, ' -i path_new.sp -o mc_out.lis']);
-    file1 = fopen('path_new.log', 'r');
+% 	[~,~] = dos([hspice_path, ' -i path_new.sp -o mc_out.lis']);
+%     file1 = fopen('path_new.log', 'r');
+    file1 = fopen('brian_out.lis', 'r');
 	
 	% Parse HSPICE Output
 	idx = 1;
@@ -47,3 +48,4 @@ for i = 1:(N_PRESAMPLE/BATCH_SZ)
 	
     fclose(file1);
 end
+toc
