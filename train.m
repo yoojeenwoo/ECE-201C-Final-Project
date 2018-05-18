@@ -4,12 +4,13 @@ N = length(labels);
 accuracy = zeros(1,10);
 
 for k=1:10
-    train_data = presample_data(:, (k-1)*N/10+1:k*N/10).';
-    train_labels = labels((k-1)*N/10+1:k*N/10).';
-    test_data = presample_data.';
-    test_data((k-1)*N/10+1:k*N/10, :) = [];
-    test_labels = labels.';
-    test_labels((k-1)*N/10+1:k*N/10) = [];
+    k
+    test_data = presample_data(:, (k-1)*N/10+1:k*N/10).';
+    test_labels = labels((k-1)*N/10+1:k*N/10).';
+    train_data = presample_data.';
+    train_data((k-1)*N/10+1:k*N/10, :) = [];
+    train_labels = labels.';
+    train_labels((k-1)*N/10+1:k*N/10) = [];
 
     cl = fitcsvm(train_data, train_labels, 'KernelFunction', 'rbf', 'BoxConstraint', 1, 'ClassNames', [0, 1]);
 
