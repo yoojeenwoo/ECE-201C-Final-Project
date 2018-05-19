@@ -1,10 +1,10 @@
 clc;
 clear all;
 close all;
-N_PRESAMPLE = 200000;
+N_PRESAMPLE = 500000;
 TAIL_THR = 1.395e-10;
 CLASS_THR = 1.38e-10;
-BATCH_SZ = 1000; % N_PRESAMPLE should be divisible by BATCH_SZ
+BATCH_SZ = 10000; % N_PRESAMPLE should be divisible by BATCH_SZ
 hspice_path = '/w/apps3/Synopsys/HSPICE/vG-2012.06/hspice/bin/hspice';
 
 %% PRESAMPLE STAGE
@@ -52,4 +52,5 @@ for i = 1:(N_PRESAMPLE/BATCH_SZ)
 	
     fclose(file1);
 end
+save('presamples.m')
 toc
