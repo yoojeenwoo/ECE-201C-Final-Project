@@ -17,14 +17,22 @@ function [samples] = sample_gen(batch_size, presample)
 	% Each gate's rows include 3 pmos values and 3 nmos values
 	
 	samples = zeros(60*batch_size, 6);
-    for b = 0:batch_size-1
-        for p = 1:6
-			pmos = normrnd(params(1, p), params(2, p), 30);
-			nmos = normrnd(params(3, p), params(4, p), 30);
-			for gate = 0:9
-				samples(b*60+gate*6+1:b*60+gate*6+3, p) = pmos(gate*3+1:gate*3+3);
-				samples(b*60+gate*6+4:b*60+gate*6+6, p) = nmos(gate*3+1:gate*3+3);
-            end
+%     for b = 0:batch_size-1
+%         for p = 1:6
+% 			pmos = normrnd(params(1, p), params(2, p), 30);
+% 			nmos = normrnd(params(3, p), params(4, p), 30);
+% 			for gate = 0:9
+% 				samples(b*60+gate*6+1:b*60+gate*6+3, p) = pmos(gate*3+1:gate*3+3);
+% 				samples(b*60+gate*6+4:b*60+gate*6+6, p) = nmos(gate*3+1:gate*3+3);
+%             end
+%         end
+%     end
+    for p = 1:6
+        pmos = normrnd(params(1, p), params(2, p), 30*batch_size, 1);
+        nmos = normrnd(params(3, p), params(4, p), 30*batch_size, 1);
+        for gate = 0:(10*batch_size-1)
+            samples(gate*6+1:gate*6+3, p) = pmos(gate*3+1:gate*3+3);
+            samples(gate*6+4:gate*6+6, p) = nmos(gate*3+1:gate*3+3);
         end
     end
 	

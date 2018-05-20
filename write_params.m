@@ -36,5 +36,6 @@ for i=1:60*num
         end
     end
 end
+fprintf(fid1, '.ENDDATA');
 
 end
