@@ -13,44 +13,47 @@ hspice_path = '/w/apps3/Synopsys/HSPICE/vG-2012.06/hspice/bin/hspice';
 % Row 0 will be the tail/non-tail result corresponding to the parameters in rows 1-360
 presample_data = zeros(360, N_PRESAMPLE); 
 labels = zeros(1, N_PRESAMPLE);
+td = zeros(1, N_PRESAMPLE);
 tic
 for i = 1:(N_PRESAMPLE/BATCH_SZ)
     i
 	% Sample_Gen output is organized in vertically stacked 60 x 6 blocks
 	% We reshape each block to be a 360 x 1 column of the presample_data matrix
 	% Reshape stacks each of the six 60x1 columns of the original sample
-	raw_samples = sample_gen(BATCH_SZ);
+	raw_samples = sample_gen(BATCH_SZ, true);
 	for j = 1:BATCH_SZ
 		presample_data(:,BATCH_SZ*(i-1)+j) = reshape(raw_samples(60*(j-1)+1:60*(j-1)+60,:), 360, 1);
 	end
 	
 	% Run HSPICE Simulation
- 	[~,~] = dos([hspice_path, ' -i path_new.sp -o mc_out.lis']);
+ 	[~,~] = dos([hspice_path, ' -i path_new_1.sp -o mc_out.lis']);
      file1 = fopen('mc_out.lis', 'r');
 %    file1 = fopen('brian_out.lis', 'r');
 	
 	% Parse HSPICE Output
-	idx = 1;
-	while(idx <= BATCH_SZ)
-		line = fgetl(file1);
-		if(~ischar(line))
-		  break;
-		end
-		if(strfind(line,'td='))
-			result = regexp(line, '(?<=td=) \d+\.\d+\w', 'match');
-			result = regexprep(result, 'p', 'e-12');
-			result = regexprep(result, 'n', 'e-09');
-			result = regexprep(result, 'f', 'e-15');
-			if str2double(result) < CLASS_THR
-				labels(BATCH_SZ*(i-1)+idx) = 0;
-			else
-				labels(BATCH_SZ*(i-1)+idx) = 1;
-			end
-			idx = idx + 1;
-		end
-	end
-	
-    fclose(file1);
+    [labels(BATCH_SZ*(i-1)+1:BATCH_SZ*i), td(BATCH_SZ*(i-1)+1:BATCH_SZ*i)] = simulate(CLASS_THR, BATCH_SZ, '', true, false);
+% 	idx = 1;
+% 	while(idx <= BATCH_SZ)
+% 		line = fgetl(file1);
+% 		if(~ischar(line))
+% 		  break;
+% 		end
+% 		if(strfind(line,'td='))
+% 			result = regexp(line, '(?<=td=) \d+\.\d+\w', 'match');
+% 			result = regexprep(result, 'p', 'e-12');
+% 			result = regexprep(result, 'n', 'e-09');
+% 			result = regexprep(result, 'f', 'e-15');
+%             td(BATCH_SZ*(i-1)+idx) = str2double(result);
+% 			if str2double(result) < CLASS_THR
+% 				labels(BATCH_SZ*(i-1)+idx) = 0;
+% 			else
+% 				labels(BATCH_SZ*(i-1)+idx) = 1;
+% 			end
+% 			idx = idx + 1;
+% 		end
+% 	end
+% 	
+%     fclose(file1);
 end
-save('presamples.m')
+save('presamples.mat');
 toc

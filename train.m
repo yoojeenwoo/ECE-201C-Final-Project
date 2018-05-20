@@ -1,4 +1,4 @@
-% load('twohundredthousand.mat');
+load('twohundredthousand.mat');
 
 N = length(labels);
 accuracy = zeros(1,10);
@@ -17,3 +17,5 @@ for k=1:10
     pred = predict(cl, test_data);
     accuracy(k) = sum(pred & test_labels)/sum(test_labels);
 end
+% save 'SVM200k.mat' cl
+saveCompactModel(cl, 'SVM_200k');
