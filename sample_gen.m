@@ -15,7 +15,8 @@ function [samples] = sample_gen(batch_size, presample)
 	% ...
 	% Gate10
 	% Each gate's rows include 3 pmos values and 3 nmos values
-	
+    
+	rng('shuffle'); % Seed RNG with current time
 	samples = zeros(60*batch_size, 6);
 %     for b = 0:batch_size-1
 %         for p = 1:6
