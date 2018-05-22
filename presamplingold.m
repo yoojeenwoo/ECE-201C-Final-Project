@@ -1,10 +1,10 @@
  clc;
  clear all;
  close all;
- N_PRESAMPLE = 2000;
+ N_PRESAMPLE = 100000;
  TAIL_THR = 1.395e-10;
  CLASS_THR = 1.38e-10;
- BATCH_SZ = 1000; % N_PRESAMPLE should be divisible by BATCH_SZ
+ BATCH_SZ = 10000; % N_PRESAMPLE should be divisible by BATCH_SZ
  hspice_path = '/w/apps3/Synopsys/HSPICE/vG-2012.06/hspice/bin/hspice';
  
  %% PRESAMPLE STAGE'
@@ -13,7 +13,7 @@
 % Row 0 will be the tail/non-tail result corresponding to the parameters in rows 1-360
 presample_data = zeros(360, N_PRESAMPLE); 
 labels = zeros(1, N_PRESAMPLE);
-td = zeros(1, N_PRESAMPLE);
+%td = zeros(1, N_PRESAMPLE);
 tic
 for i = 1:(N_PRESAMPLE/BATCH_SZ)
     i
