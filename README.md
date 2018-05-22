@@ -12,6 +12,9 @@
 3. Runs MATLAB script with no hangup directly from command line. MATLAB console output is printed to `nohup.out`.
 
 ```nohup /w/apps3/Matlab/R2016a/bin/matlab -r -nodisplay -nodesktop "run('presample.m')" &```
+or use
+```nohup /w/apps3/Matlab/R2016a/bin/matlab -r -nodisplay -nodesktop "run('presamplingold.m')" >& "presampleout.out"```
+
 
 4. Simulate the filtered samples.
 
