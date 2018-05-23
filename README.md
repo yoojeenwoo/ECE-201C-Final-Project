@@ -13,7 +13,7 @@
 
 ```nohup /w/apps3/Matlab/R2016a/bin/matlab -r -nodisplay -nodesktop "run('presample.m')" &```
 or use
-```nohup /w/apps3/Matlab/R2016a/bin/matlab -r -nodisplay -nodesktop "run('presamplingold.m')" >& "presampleout.out"```
+```nohup /w/apps3/Matlab/R2016a/bin/matlab -r -nodisplay -nodesktop "run('presample.m')" >& "presampleout.out"```
 
 
 4. Simulate the filtered samples.
