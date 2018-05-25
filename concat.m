@@ -9,4 +9,4 @@ load(sam_mat(i));
 labels_new=[labels_new labels];
 presample_data_new=[presample_data_new presample_data];
 end
-save('concat_presamples.mat','presample_data_new','labels_new');
+save('concat_presamples.mat','presample_data_new','labels_new','-v7.3');
