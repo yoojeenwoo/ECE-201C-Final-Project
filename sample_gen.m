@@ -1,5 +1,5 @@
 
-function [samples] = sample_gen(batch_size, presample)
+function [samples] = sample_gen(batch_size, saver)
 	% Columns: toxe, xl, xw, vth, u0, voff
 	param_names = ['toxe'; 'xl  '; 'xw  '; 'vth0'; 'u0  '; 'voff'];
 	% Rows: mean(pmos), std(pmos), mean(nmos), std(nmos)
@@ -37,7 +37,7 @@ function [samples] = sample_gen(batch_size, presample)
         end
     end
 	
-    if presample==true
+    if saver==true
         write_params(param_names, samples, batch_size);
     end
 end
