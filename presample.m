@@ -29,5 +29,5 @@ for i = 1:(N_PRESAMPLE/BATCH_SZ)
     [labels(BATCH_SZ*(i-1)+1:BATCH_SZ*i), td(BATCH_SZ*(i-1)+1:BATCH_SZ*i)] = simulate(CLASS_THR, BATCH_SZ, '', true, false);
 
 end
-save('presamples.mat');
+save('presamples.mat', 'labels', 'presample_data');
 toc
