@@ -9,13 +9,11 @@ N_PRESAMPLE = log(N)/log(BATCH_SZ)*BATCH_SZ;
 param_names = ['toxe'; 'xl  '; 'xw  '; 'vth0'; 'u0  '; 'voff'];
 hspice_path = '/w/apps3/Synopsys/HSPICE/vG-2012.06/hspice/bin/hspice';
 
-%% PRUNING STAGE
-data = load('concat_presamples.mat');
-idxs = pruning(data.labels_new, data.presample_data_new);
-
 %% PRESAMPLE STAGE
 tic
 
+relieff = load('pruned_indices.mat');
+idxs = relieff.idxs;
 n = BATCH_SZ;
 % Presampled Data will group data points by column.
 presample_data = zeros(360, n);
