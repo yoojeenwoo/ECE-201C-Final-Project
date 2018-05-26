@@ -2,31 +2,40 @@
 
 ### Design Flow
 1. Presample (`presample.m`)
+
 Run Monte Carlo and simulate the results in batches. Outputs parameters and labels.
 
+2. Parameter Pruning (`pruning.m`)
+
+Prunes parameters with RELIEFF and returns the indices of only the significant parameters.
+
 2. Recursive Statistical Blockade (`presample_recursive.m`)
+
 Run RELIEFF on presample data to prune parameters. Recursively sample and simulate data, train the classifier, and use classifier to filter out consecutive data.
 
 3. Tail Fitting (`Tail_fitting.m`)
+
 Construct model of tail using Generalized Pareto Distribution
 
 ### Utilities
 - Monte Carlo (`sample_gen.m`)
+
 Generates batch of sampled parameters using Monte Carlo.
 
 - Simulation (`simulate.m`)
+
 Simulates a batch of sampled parameters using HSPICE. Parses output file and labels data according to given threshold.
 
 - Write HSPICE Parameter File (`write_params.m`)
+
 Writes batch of sampled parameters to text file in HSPICE data format.
 
 - Concatenate (`concat.m`)
+
 Concatenates data from multiple presample runs together. Used after step 1.
 
-- RELIEFF (`pruning.m`)
-Prunes parameters and returns the indices of only the significant parameters.
-
 - Train Classifier (`train.m`)
+
 Trains classifier with optional 10-fold cross validation.
 
 
