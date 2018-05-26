@@ -21,7 +21,7 @@ raw_samples = sample_gen(n, true);
 for j = 1:BATCH_SZ
 		presample_data(:,j) = reshape(raw_samples(60*(j-1)+1:60*(j-1)+60,:), 360, 1);
 end
-[~, td] = simulate(CLASS_THR, n, '', true, false);
+[~, td] = simulate(CLASS_THR, n, '', false, false);
 
 while n < N
     n
@@ -35,12 +35,10 @@ while n < N
     td = td_sorted(1:BATCH_SZ);
     presample_sorted = presample_data(:,I);
     presample_data = presample_sorted(:,1:BATCH_SZ);
-    labels_sorted = labels(I);
-    labels = labels_sorted(1:BATCH_SZ);
     
     CLASS_THR = td(30); % Reset classification threshold to 97th percentile
     
-    cl = train(presample_data(idxs,:), labels(idxs), false, false);
+    cl = train(presample_data(idxs,:), td, CLASS_THR, false, false);
     
     n = n*100;
     
@@ -60,7 +58,7 @@ while n < N
     write_params(param_names, reshaped_data, batch_size);
 	
 	% Run HSPICE Simmulation and Parse Output
-    [labels, td] = simulate(CLASS_THR, batch_size, '', true, false);
+    [~, td] = simulate(CLASS_THR, batch_size, '', true, false);
 
 end
 save('filtered_samples.mat', 'labels', 'presample_data');

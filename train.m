@@ -1,4 +1,4 @@
-function [cl] = train(presample_data, labels, cv, saver)
+function [cl] = train(presample_data, td, thr, cv, saver)
 
 %     load(data_file);
     %% Cross Validation
@@ -22,9 +22,17 @@ function [cl] = train(presample_data, labels, cv, saver)
         disp(accuracy);
     end
     %% Training Phase
+    labels = zeros(1, length(presample_data));
+    for i=1:length(td)
+        if td(i) >= thr
+            labels(i) = 1;
+        end
+    end
+    
+    
     cl = fitcsvm(presample_data.', labels.', 'KernelFunction', 'rbf', 'BoxConstraint', Inf, 'ClassNames', [0, 1]);
     if saver
         % save 'SVM200k.mat' cl
-        saveCompactModel(cl, 'SVM_200k');
+        saveCompactModel(cl, 'SVM_900k');
     end
 end
