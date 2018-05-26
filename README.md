@@ -11,7 +11,7 @@ Prunes parameters with RELIEFF and returns the indices of only the significant p
 
 2. Recursive Statistical Blockade (`presample_recursive.m`)
 
-Run RELIEFF on presample data to prune parameters. Recursively sample and simulate data, train the classifier, and use classifier to filter out consecutive data.
+Recursively sample and simulate data, train the classifier, and use classifier to filter out consecutive data.
 
 3. Tail Fitting (`Tail_fitting.m`)
 
