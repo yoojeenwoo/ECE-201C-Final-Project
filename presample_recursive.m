@@ -65,5 +65,5 @@ while n < N
     [labels, td] = simulate(CLASS_THR, batch_size, '', true, false);
 
 end
-save('presamples.mat', 'labels', 'presample_data');
+save('filtered_samples.mat', 'labels', 'presample_data');
 toc
