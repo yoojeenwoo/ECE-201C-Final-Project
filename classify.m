@@ -2,12 +2,12 @@ clc;
 clear;
 close all;
 
-N_SAMPLE = 50;
+N_SAMPLE = 500;
 TAIL_THR = 1.395e-10;
 CLASS_THR = 1.38e-10;
 BATCH_SZ = 100000;
 % load 'SVM_200k.mat'
-cl = loadCompactModel('SVM_200k.mat');
+cl = loadCompactModel('SVM_900k.mat');
 param_names = ['toxe'; 'xl  '; 'xw  '; 'vth0'; 'u0  '; 'voff'];
 
 %% SAMPLE STAGE
@@ -37,8 +37,12 @@ while (sample_count < N_SAMPLE)
     end
     sample_count = sample_count + sum(labels);
 end
-
-write_params(param_names, reshape(sample_data, 60*N_SAMPLE, 6), N_SAMPLE);
+%% Reshape and Write Parameters
+reshaped_data = zeros(60*N_SAMPLE, 6);
+for j = 1:N_SAMPLE
+    reshaped_data(60*(j-1)+1:60*j,:) = reshape(sample_data(:,j), 60, 6);
+end
+write_params(param_names, reshaped_data, N_SAMPLE);
 
 toc
 

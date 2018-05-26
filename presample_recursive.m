@@ -48,7 +48,11 @@ while n < N
     labels = predict(cl, presample_data.');
     presample_data = presample_data(:, labels==1);
     batch_size = size(presample_data, 2);
-    write_params(param_names, reshape(presample_data, 60*batch_size, 6), batch_size);
+    reshaped_data = zeros(60*batch_size, 6);
+    for j = 1:batch_size
+        reshaped_data(60*(j-1)+1:60*j,:) = reshape(presample_data(:,j), 60, 6);
+    end
+    write_params(param_names, reshaped_data, batch_size);
 	
 	% Run HSPICE Simmulation and Parse Output
     [labels, td] = simulate(CLASS_THR, batch_size, '', true, false);
