@@ -1,7 +1,7 @@
 clc;
 clear all;
 close all;
-N = 1000000000;
+N = 10000000;
 TAIL_THR = 1.395e-10;
 CLASS_THR = 0; % Will be set during recursion
 BATCH_SZ = 1000;
@@ -45,6 +45,7 @@ while n < N
     % Run Monte Carlo and filter out samples with trained classifier
     presample_data = [];
     for i=1:n/1000
+        disp(i);
         raw_samples = sample_gen(1000, false);
         temp_data = zeros(360, 1000);
         for j = 1:BATCH_SZ
@@ -65,5 +66,5 @@ while n < N
     [~, td] = simulate(CLASS_THR, batch_size, '', true, false);
 
 end
-save('filtered_samples.mat', 'labels', 'presample_data');
+save('filtered_samples.mat', 'presample_data', 'td');
 toc
