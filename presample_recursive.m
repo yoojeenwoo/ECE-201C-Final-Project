@@ -31,10 +31,10 @@ while n < N
     
     % Select the worst delay times out of the simulation
     [~, I] = sort(td, 'descend');
-    td_sorted = td(I);
-    td = td_sorted(1:BATCH_SZ);
-    presample_sorted = presample_data(:,I);
-    presample_data = presample_sorted(:,1:BATCH_SZ);
+    td = td(I);
+    td = td(1:BATCH_SZ);
+    presample_data = presample_data(:,I);
+    presample_data = presample_data(:,1:BATCH_SZ);
     
     CLASS_THR = td(30); % Reset classification threshold to 97th percentile
     
@@ -43,13 +43,17 @@ while n < N
     n = n*100;
     
     % Run Monte Carlo and filter out samples with trained classifier
-    presample_data = zeros(360, n);
-	raw_samples = sample_gen(n, false);
-    for j = 1:BATCH_SZ
-		presample_data(:,j) = reshape(raw_samples(60*(j-1)+1:60*(j-1)+60,:), 360, 1);
+    presample_data = [];
+    for i=1:n/1000
+        raw_samples = sample_gen(1000, false);
+        temp_data = zeros(360, 1000);
+        for j = 1:BATCH_SZ
+            temp_data(:,j) = reshape(raw_samples(60*(j-1)+1:60*(j-1)+60,:), 360, 1);
+        end
+        labels = predict(cl, temp_data(idxs,:).');
+        presample_data = [presample_data temp_data(:, labels==1)];
     end
-    labels = predict(cl, presample_data(idxs,:).');
-    presample_data = presample_data(:, labels==1);
+    
     batch_size = size(presample_data, 2);
     reshaped_data = zeros(60*batch_size, 6);
     for j = 1:batch_size
