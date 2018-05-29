@@ -1,6 +1,6 @@
 # ECE-201C-Final-Project
 
-### Design Flow
+### REScope + Recursive Statistical Blockade Design Flow
 1. Presample (`presample.m`)
 
 Run Monte Carlo and simulate the results in batches. Outputs parameters and labels.
@@ -16,6 +16,23 @@ Recursively sample and simulate data, train the classifier, and use classifier t
 3. Tail Fitting (`Tail_fitting.m`)
 
 Construct model of tail using Generalized Pareto Distribution
+
+### REScope Design Flow
+1. Presample (`presample.m`)
+2. Parameter Pruning (`pruning.m`)
+3. Train Classifier (`train.m`)
+
+Given a labeled data set, train a classifier
+
+4. MC and Filter (`classify.m`)
+
+Iteratively run Monte Carlo and use trained classifier to filter out samples until desired number of samples is reached
+
+5. Simulate (`simulate.m`)
+
+Simulate the filtered samples
+
+5. Tail Fitting (`Tail_fitting.m`)
 
 ### Utilities
 - Monte Carlo (`sample_gen.m`)
