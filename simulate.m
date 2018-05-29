@@ -38,6 +38,6 @@ function [labels, td] = simulate(CLASS_THR, num, filename, presample, saver)
 
     fclose(file1);
     if saver==true
-        save(filename);
+        save(filename, 'td', 'labels');
     end
 end
