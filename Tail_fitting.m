@@ -1,28 +1,18 @@
 clc;
 clear all;
 close all;
-load 5_25_results.mat
-%calculating the mean and variance of output delays
-mean_out_delay=mean(td);
-sigma=(var(td))^(1/2);
-%6 sigma
-thresh6=mean_out_delay+6*sigma;
+load filtered_samples_5_26.mat;
+td_new=td;
+load filtered_samples_5_27.mat;
+td_new=[td_new td];
+load filtered_samples_5_28.mat;
+td_new=[td_new td];
 
-%fitting parameters for GPD
-paramEsts = gpfit(td(td>thresh6)-thresh6);
-kHat      = paramEsts(1)   % Tail index parameter
-sigmaHat  = paramEsts(2)   % Scale parameter
-x = linspace(0,100,1000);
-fit6sigma = gppdf(x,kHat,sigmaHat,0);
-
-%plotting the fit
-delay6thresh = td(td>thresh6);
-[nelements,centres] = hist(delay6thresh,100);
-figure
-plot(centres,nelements/length(td),'o')
-hold on
-plot(x/1e13+thresh6,fit6sigma/length(td)*length(td(td>thresh6)),'-')
-legend('Sample points','GPD Fitting Curve')
-hold off
-xlabel('Delay (s)')
-ylabel('Probability')
+%% 
+td_new=td_new*1e10;
+thresh=1.38;
+y=(td_new(td_new>thresh)-thresh);
+fit=gpfit(y);
+x=1.39:0.000001:1.42;
+p=gppdf(x,fit(1),fit(2),1.39);
+plot((1.39:0.000001:1.42)*1e-10,p/length(td_new));
