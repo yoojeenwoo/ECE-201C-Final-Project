@@ -7,7 +7,8 @@ TAIL_THR = 1.395e-10;
 CLASS_THR = 1.38e-10;
 BATCH_SZ = 100000;
 % load 'SVM_200k.mat'
-cl = loadCompactModel('SVM_900k.mat');
+cl = loadCompactModel('SVM_900k_pruned.mat');
+prune = load('pruned_indices.mat');
 param_names = ['toxe'; 'xl  '; 'xw  '; 'vth0'; 'u0  '; 'voff'];
 
 %% SAMPLE STAGE
@@ -17,7 +18,9 @@ param_names = ['toxe'; 'xl  '; 'xw  '; 'vth0'; 'u0  '; 'voff'];
 sample_data = zeros(360, N_SAMPLE);
 tic
 sample_count = 0;
+iteration_count = 0;
 while (sample_count < N_SAMPLE)
+    iteration_count = iteration_count + 1;
     sample_count
 	% Sample_Gen output is organized in vertically stacked 60 x 6 blocks
 	% We reshape each block to be a 360 x 1 column of the presample_data matrix
@@ -27,7 +30,7 @@ while (sample_count < N_SAMPLE)
     for j = 1:BATCH_SZ
 		batch_samples(:,j) = reshape(raw_samples(60*(j-1)+1:60*(j-1)+60,:), 360, 1);
     end
-    labels = predict(cl, batch_samples.'); % Run Monte Carlo samples through trained classifier
+    labels = predict(cl, batch_samples(prune.idxs,:).'); % Run Monte Carlo samples through trained classifier
     batch_samples = batch_samples(:, labels==1); % Filter out samples
     n_hits = sum(labels); % Number of samples identified by classifier
     if (n_hits > N_SAMPLE-sample_count) % If more samples than required to fill sample_data array
