@@ -33,12 +33,12 @@ while n < N
     [~, I] = sort(td, 'descend');
     td = td(I);
     td = td(1:BATCH_SZ);
-    presample_data = presample_data(:,I);
-    presample_data = presample_data(:,1:BATCH_SZ);
+%     presample_data = presample_data(:,I);
+%     presample_data = presample_data(:,1:BATCH_SZ);
     
     CLASS_THR = td(30); % Reset classification threshold to 97th percentile
     
-    cl = train(presample_data(idxs,:), td, CLASS_THR, false, false);
+    cl = train(presample_data(idxs,:), td, CLASS_THR, false);
     
     n = n*100;
     
