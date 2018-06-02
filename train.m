@@ -1,38 +1,16 @@
-function [cl] = train(presample_data, td, thr, cv, saver)
+function [cl] = train(presample_data, td, idx, thr, saver)
 
 %     load(data_file);
-    %% Cross Validation
-    if cv
-        N = length(labels);
-        accuracy = zeros(1,10);
-        for k=1:10
-            k
-            test_data = presample_data(:, (k-1)*N/10+1:k*N/10).';
-            test_labels = labels((k-1)*N/10+1:k*N/10).';
-            train_data = presample_data.';
-            train_data((k-1)*N/10+1:k*N/10, :) = [];
-            train_labels = labels.';
-            train_labels((k-1)*N/10+1:k*N/10) = [];
+labels = zeros(1, length(presample_data));
+for i=1:length(td)
+    if td(i) >= thr
+        labels(i) = 1;
+    end
+end
 
-            cl = fitcsvm(train_data, train_labels, 'KernelFunction', 'rbf', 'BoxConstraint', Inf, 'ClassNames', [0, 1]);
 
-            pred = predict(cl, test_data);
-            accuracy(k) = sum(pred & test_labels)/sum(test_labels);
-        end
-        disp(accuracy);
-    end
-    %% Training Phase
-    labels = zeros(1, length(presample_data));
-    for i=1:length(td)
-        if td(i) >= thr
-            labels(i) = 1;
-        end
-    end
-    
-    
-    cl = fitcsvm(presample_data.', labels.', 'KernelFunction', 'rbf', 'BoxConstraint', Inf, 'ClassNames', [0, 1]);
-    if saver
-        % save 'SVM200k.mat' cl
-        saveCompactModel(cl, 'SVM_900k');
-    end
+cl = fitcsvm(presample_data(idx,:).', labels.', 'KernelFunction', 'rbf', 'BoxConstraint', Inf, 'ClassNames', [0, 1]);
+if saver
+    saveCompactModel(cl, 'SVM_900k_pruned');
+end
 end
