@@ -12,8 +12,8 @@ hspice_path = '/w/apps3/Synopsys/HSPICE/vG-2012.06/hspice/bin/hspice';
 %% PRESAMPLE STAGE
 tic
 
-relieff = load('pruned_indices.mat');
-idxs = relieff.idxs;
+% relieff = load('pruned_indices.mat');
+idxs = 181:360;
 n = BATCH_SZ;
 % Presampled Data will group data points by column.
 presample_data = zeros(360, n);
@@ -38,7 +38,7 @@ while n < N
     
     CLASS_THR = td(30); % Reset classification threshold to 97th percentile
     
-    cl = train(presample_data(idxs,:), td, CLASS_THR, false);
+    cl = train(presample_data, td, idxs, CLASS_THR, false);
     
     n = n*100;
     
