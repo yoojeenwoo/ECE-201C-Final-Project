@@ -1,8 +1,9 @@
 data = load('900k_presamples_withtd.mat');
-prune = load('pruned_indices.mat');
+% prune = load('pruned_indices.mat');
 presample_data = data.presample_data_new;
 labels = data.labels_new;
-idxs = prune.idxs;
+% idxs = prune.idxs;
+idxs = 181:360;
 
 folds = 4;
 N = length(labels);
@@ -20,17 +21,18 @@ for k=1:4
     train_labels = labels.';
     train_labels((k-1)*N/folds+1:k*N/folds) = [];
 
-    cl = fitcsvm(train_data(:, idxs), train_labels, 'KernelFunction', 'rbf', 'BoxConstraint', Inf, 'ClassNames', [0, 1]);
+    cl = fitcsvm(train_data(:, idxs), train_labels, 'KernelFunction', 'rbf', 'Cost', [0,1;1000,0], 'ClassNames', [0, 1]);
+%     cl = fitcsvm(train_data, train_labels, 'KernelFunction', 'rbf', 'BoxConstraint', Inf, 'ClassNames', [0, 1]);
 
     pred = predict(cl, test_data(:, idxs));
     accuracy(k) = sum(pred & test_labels)/sum(test_labels);
 
     for i=1:length(pred)
-        if pred(i) == 1 && labels(i) == 1
+        if pred(i) == 1 && test_labels(i) == 1
             tp = tp + 1;
-        elseif pred(i) == 1 && labels(i) == 0
+        elseif pred(i) == 1 && test_labels(i) == 0
             fp = fp + 1;
-        elseif pred(i) == 0 && labels(i) == 1
+        elseif pred(i) == 0 && test_labels(i) == 1
             fn = fn + 1;
         else
             tn = tn + 1;

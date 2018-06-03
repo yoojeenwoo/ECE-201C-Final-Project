@@ -9,8 +9,8 @@ for i=1:length(td)
 end
 
 
-cl = fitcsvm(presample_data(idx,:).', labels.', 'KernelFunction', 'rbf', 'BoxConstraint', Inf, 'ClassNames', [0, 1]);
+cl = fitcsvm(presample_data(idx,:).', labels.', 'KernelFunction', 'rbf', 'Cost', [0,1;1000,0], 'ClassNames', [0, 1]);
 if saver
-    saveCompactModel(cl, 'SVM_900k_pruned');
+    saveCompactModel(cl, 'SVM_900k_pruned180');
 end
 end
