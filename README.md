@@ -1,5 +1,20 @@
 # ECE-201C-Final-Project
 
+### Overnight Processes to Run
+**06/02:**
+
+Eugene: Train on 180 pruned, Run Classify, 
+
+Brian: NN 900k
+
+**06/03:**
+
+Eugene: Cross Validate SVM 900k
+
+**06/04:**
+
+Eugene: Random Forest 900k
+
 ### REScope + Recursive Statistical Blockade Design Flow
 1. Presample (`presample.m`)
 
