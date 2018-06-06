@@ -1,7 +1,7 @@
 clc;
 clear all;
 close all;
-N = 10000000;
+N = 100000000;
 TAIL_THR = 1.395e-10;
 CLASS_THR = 0; % Will be set during recursion
 BATCH_SZ = 1000;
@@ -11,17 +11,20 @@ hspice_path = '/w/apps3/Synopsys/HSPICE/vG-2012.06/hspice/bin/hspice';
 
 %% PRESAMPLE STAGE
 tic
-
-% relieff = load('pruned_indices.mat');
-idxs = 181:360;
-n = BATCH_SZ;
-% Presampled Data will group data points by column.
-presample_data = zeros(360, n);
-raw_samples = sample_gen(n, true);
-for j = 1:BATCH_SZ
-		presample_data(:,j) = reshape(raw_samples(60*(j-1)+1:60*(j-1)+60,:), 360, 1);
-end
-[~, td] = simulate(CLASS_THR, n, '', false, false);
+pruned = load('pruned_indices_40.mat');
+idxs = pruned.ranks_40;
+% idxs = 181:360;
+% n = BATCH_SZ;
+n = 10000;
+% presample_data = zeros(360, n);
+% raw_samples = sample_gen(n, true);
+% for j = 1:BATCH_SZ
+% 		presample_data(:,j) = reshape(raw_samples(60*(j-1)+1:60*(j-1)+60,:), 360, 1);
+% end
+% [~, td] = simulate(CLASS_THR, n, '', false, false);
+data = load('Presamples_100k\presamples_2_withtd.mat');
+presample_data = data.presample_data(:,1:n);
+td = data.td(1:n);
 
 while n < N
     n
@@ -62,8 +65,8 @@ while n < N
     end
     write_params(param_names, reshaped_data, batch_size);
 	
-	% Run HSPICE Simmulation and Parse Output
-    [~, td] = simulate(CLASS_THR, batch_size, '', true, false);
+	%% Run HSPICE Simmulation and Parse Output
+%     [~, td] = simulate(CLASS_THR, batch_size, '', true, false);
 
 end
 save('filtered_samples.mat', 'presample_data', 'td');
