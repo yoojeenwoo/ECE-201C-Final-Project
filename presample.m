@@ -1,7 +1,7 @@
 clc;
 clear all;
 close all;
-N_PRESAMPLE = 1000000;
+N_PRESAMPLE = 100000; % Total number of samples to generate and simulate
 TAIL_THR = 1.395e-10;
 CLASS_THR = 1.38e-10;
 BATCH_SZ = 1000; % N_PRESAMPLE should be divisible by BATCH_SZ

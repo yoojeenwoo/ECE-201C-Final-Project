@@ -1,5 +1,10 @@
 
 function [samples] = sample_gen(batch_size, saver)
+% @param batch_size: Integer size of the batch of samples to generate
+% @param saver: Boolean value indicating whether to save the generated
+% samples in a .mat file
+% @return samples: The generated (60*batch_size x 6) sample matrix
+
 	% Columns: toxe, xl, xw, vth, u0, voff
 	param_names = ['toxe'; 'xl  '; 'xw  '; 'vth0'; 'u0  '; 'voff'];
 	% Rows: mean(pmos), std(pmos), mean(nmos), std(nmos)

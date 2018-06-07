@@ -12,7 +12,7 @@ tp = 0;
 fp = 0;
 tn = 0;
 fn = 0;
-for k=1:4
+for k=1:folds
     k
     test_data = presample_data(:, (k-1)*N/folds+1:k*N/folds).';
     test_labels = labels((k-1)*N/folds+1:k*N/folds).';

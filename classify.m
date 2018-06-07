@@ -1,14 +1,16 @@
+% Filter MC samples for REscope without recursive statistical blockade
+
 clc;
 clear;
 close all;
 
-N_SAMPLE = 500;
+N_SAMPLE = 2000; % Continue filtering until N_SAMPLE samples have passed the classifier
 TAIL_THR = 1.395e-10;
 CLASS_THR = 1.38e-10;
-BATCH_SZ = 100000;
-% load 'SVM_200k.mat'
-cl = loadCompactModel('SVM_900k_pruned.mat');
-prune = load('pruned_indices.mat');
+BATCH_SZ = 100000; % Generate batches of BATCH_SZ samples
+cl = loadCompactModel('SVM_2_1k.mat');
+% prune = load('pruned_indices.mat');
+idxs = 181:360;
 param_names = ['toxe'; 'xl  '; 'xw  '; 'vth0'; 'u0  '; 'voff'];
 
 %% SAMPLE STAGE
@@ -30,7 +32,7 @@ while (sample_count < N_SAMPLE)
     for j = 1:BATCH_SZ
 		batch_samples(:,j) = reshape(raw_samples(60*(j-1)+1:60*(j-1)+60,:), 360, 1);
     end
-    labels = predict(cl, batch_samples(prune.idxs,:).'); % Run Monte Carlo samples through trained classifier
+    labels = predict(cl, batch_samples(idxs,:).'); % Run Monte Carlo samples through trained classifier
     batch_samples = batch_samples(:, labels==1); % Filter out samples
     n_hits = sum(labels); % Number of samples identified by classifier
     if (n_hits > N_SAMPLE-sample_count) % If more samples than required to fill sample_data array
